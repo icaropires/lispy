@@ -1,13 +1,25 @@
-?start : value+
+?start : expr 
 
-?value : SYMBOL
- 
+?expr : "(" expr ")"
+      | atom 
+
+
+?atom: INT -> number
+     | NAME -> name
+     | OP -> op
+     | FLOAT -> number 
+     | BOOL -> bool
+     | STRING -> string
 
 // Terminais
-SYMBOL.0  : /[-!+\/*@$%^&~<>?|\\\w=]+/
-STRING    : /"[^"\\]*(\\[^\n\t\r\f][^"\\]*)*"/
-INT.1     : /-?\d+/
-FLOAT.2   : /-?\d+\.\d+/
+SYMBOL  : /[-!+\/*@$%^&~<>?|\\\w=]+/
+STRING  : /"[^"\\]*(\\[^\n\t\r\f][^"\\]*)*"/
+INT     : /-?\d+/
+FLOAT   : /-?\d+\.\d+/
+BOOL    : /(#t|#f)/
+NAME    : /[a-zA-Z]\w*/
+OP : /[\+\-\*\/]/
+
 
 %ignore /\s+/
 %ignore /;[^\n]*/
