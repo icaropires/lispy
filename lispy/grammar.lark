@@ -1,15 +1,20 @@
 ?start : expr 
 
-?expr : "(" expr ")"
+?expr :  "(" OP atom atom ")" -> binop
+			| list
+
+?list : "(" atom list* ")" -> list
+			| "(" list ")" -> list
+			| "()" -> list
       | atom 
 
 
-?atom: INT -> number
-     | NAME -> name
-     | OP -> op
-     | FLOAT -> number 
-     | BOOL -> bool
-     | STRING -> string
+?atom : INT -> number
+      | NAME -> name
+      | OP -> op
+      | FLOAT -> number
+      | BOOL -> bool
+      | STRING -> string
 
 // Terminais
 SYMBOL  : /[-!+\/*@$%^&~<>?|\\\w=]+/
