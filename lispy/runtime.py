@@ -19,7 +19,7 @@ def eval(x, env=None):
     if isinstance(x, Symbol):
         return NotImplemented
     elif isinstance(x, (int, float, bool, str)):
-        return NotImplemented
+        return x
 
     # Avalia formas especiais e listas
     head, *args = x
@@ -27,12 +27,15 @@ def eval(x, env=None):
     # Comando (if <test> <then> <other>)
     # Ex: (if (even? x) (quotient x 2) x)
     if head == Symbol.IF:
-        return NotImplemented
+        (test, then, alt) = args
+        exp = (then if eval(test, env) else alt)
+        return exp
 
     # Comando (define <symbol> <expression>)
     # Ex: (define x (+ 40 2))
     elif head == Symbol.DEFINE:
-        return NotImplemented
+        (symbol, exp) = args
+        env[symbol] = result = eval(exp, env)
 
     # Comando (quote <expression>)
     # (quote (1 2 3))
@@ -52,7 +55,13 @@ def eval(x, env=None):
     # Lista/chamada de funções
     # (sqrt 4)
     else:
-       return NotImplemented
+        pass
+        #print('xx', type(x), x)
+        #cmd = x[0]
+        #print('cc', cmd)
+        #proc = eval(cmd, env)
+        #args = (eval(arg, env) for arg in x[1:])
+        #return proc(*args)
 
 
 #
@@ -121,7 +130,7 @@ def _make_global_env():
         'not':     op.not_,
         'null?':   lambda x: x == [], 
         'number?': lambda x: isinstance(x, (float, int)),  
-		'odd?':   lambda x: x % 2 == 1,
+        'odd?':   lambda x: x % 2 == 1,
         'print':   print,
         'procedure?': callable,
         'quotient': op.floordiv,
