@@ -55,7 +55,7 @@ def eval(x, env=None):
 
     # Comando (lambda <vars> <body>)
     # (lambda (x) (+ x 1))
-    elif head == Symbol.LAMBDA or head == 'fn':
+    elif head == Symbol.LAMBDA or head == Symbol.FN:
         params, body = args
 
         if not isinstance(params, list):
@@ -72,7 +72,7 @@ def eval(x, env=None):
 
         return lambdaa
 
-    elif head == 'defn':
+    elif head == Symbol.DEFN:
         name, params, body = args
 
         if not all(map(lambda a: isinstance(a, Symbol), params)):

@@ -56,11 +56,11 @@ class LispTransformer(InlineTransformer):
 
     def sugar_fn(self, *args):
         *params, body = args
-        return ['fn', params, body]
+        return [Symbol.FN, params, body]
 
     def function(self, *args):
         name, *params, body = args
-        return ['defn', str(name), params, body]
+        return [Symbol.DEFN, str(name), params, body]
 
     def lists(self, *args):
         return [Symbol.LIST] + list(args)
