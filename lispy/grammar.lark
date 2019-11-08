@@ -1,6 +1,8 @@
-?start : list
+?start : lists
 
-?list : "(" list* ")" -> list
+?lists : list+
+
+?list : "(" list* ")"
       | "'"list -> quote
       | "[" list "("? [OP|NAME] ")"? list "]" -> infix
       | sugar_let
@@ -32,7 +34,7 @@ INT     : /-?\d+/
 FLOAT   : /-?\d+\.\d+/
 BOOL    : /(#t|#f)/
 NAME    : /[a-zA-Z]\w*\??/
-OP      : /[\+\-\*\/]/
+OP      : /(<=)|(>=)|[\+\-\*\/<>=]/
 
 
 %ignore /\s+/
