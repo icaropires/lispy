@@ -1,18 +1,21 @@
 from lark import Lark, InlineTransformer
 from pathlib import Path
-import re
 
 from .runtime import Symbol
 
 
 class LispTransformer(InlineTransformer):
-    number = float 
+    number = float
 
     def start(self, *args):
         return [Symbol.BEGIN, *args]
 
     def string(self,  string):
-        return str(string[1:-1]).replace('\\n', '\n').replace('\\t', '\t').replace('\\f', '\f').replace('\\r', '\r').replace('\\"', '\"')
+        return str(string[1:-1]).replace('\\n', '\n')\
+            .replace('\\t', '\t')\
+            .replace('\\f', '\f')\
+            .replace('\\r', '\r')\
+            .replace('\\"', '\"')
 
     def op(self, op):
         return Symbol(op)
@@ -23,12 +26,9 @@ class LispTransformer(InlineTransformer):
     def bool(self, value):
         return True if value == "#t" else False
 
-    def binop(self, op, left, right):
-        op = str(op)
-        return [Symbol(op), left, right]
-
     def list(self, *args):
         return list(args)
+
 
 def parse(src: str):
     """

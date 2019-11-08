@@ -1,12 +1,7 @@
-?start : expr 
+?start : list
 
-?expr :  "(" OP atom atom ")" -> binop
-			| list
-
-?list : "(" atom list* ")" -> list
-			| "(" list ")" -> list
-			| "()" -> list
-      | atom 
+?list : "(" list* ")" -> list
+      | atom
 
 
 ?atom : INT -> number
@@ -22,7 +17,7 @@ STRING  : /"[^"\\]*(\\[^\n\t\r\f][^"\\]*)*"/
 INT     : /-?\d+/
 FLOAT   : /-?\d+\.\d+/
 BOOL    : /(#t|#f)/
-NAME    : /[a-zA-Z]\w*/
+NAME    : /[a-zA-Z]\w*\??/
 OP : /[\+\-\*\/]/
 
 
