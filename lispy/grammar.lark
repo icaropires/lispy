@@ -2,7 +2,7 @@
 
 ?lists : list+
 
-?list : "(" list* ")"
+?list : "(" list* ")" -> list
       | "'"list -> quote
       | "[" list "("? [OP|NAME] ")"? list "]" -> infix
       | sugar_let
