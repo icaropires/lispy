@@ -10,14 +10,15 @@ def eval(x, env=None):
     """
     Avalia expressão no ambiente de execução dado.
     """
-
     # Cria ambiente padrão, caso o usuário não passe o argumento opcional "env"
     if env is None:
         env = ChainMap({}, global_env)
 
     # Avalia tipos atômicos
     if isinstance(x, Symbol):
-        return NotImplemented
+        if x == Symbol('x'):
+            print('@@@@@', list(env))
+        return env[x]
     elif isinstance(x, (int, float, bool, str)):
         return x
 
@@ -39,12 +40,18 @@ def eval(x, env=None):
     # Comando (quote <expression>)
     # (quote (1 2 3))
     elif head == Symbol.QUOTE:
-        return NotImplemented
+        return x[1]
 
     # Comando (let <expression> <expression>)
     # (let ((x 1) (y 2)) (+ x y))
     elif head == Symbol.LET:
-        return NotImplemented
+        tmp_exprs, expr = args
+
+        tmp_env = env.new_child(
+            {Symbol(k): eval(v, env) for k, v in tmp_exprs}
+        )
+
+        return eval(expr, tmp_env)
 
     # Comando (lambda <vars> <body>)
     # (lambda (x) (+ x 1))
@@ -54,7 +61,7 @@ def eval(x, env=None):
     # Lista/chamada de funções
     # (sqrt 4)
     else:
-        args = map(eval, args)
+        args = map(eval, args, [env]*len(args))
         return env[head](*args)
 
 

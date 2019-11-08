@@ -29,6 +29,9 @@ class LispTransformer(InlineTransformer):
     def list(self, *args):
         return list(args)
 
+    def quote(self, expr):
+        return [Symbol.QUOTE, expr]
+
 
 def parse(src: str):
     """

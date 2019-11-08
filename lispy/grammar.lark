@@ -2,6 +2,7 @@
 
 ?list : "(" list* ")" -> list
       | atom
+      | "'"list -> quote
 
 
 ?atom : INT -> number
@@ -18,7 +19,7 @@ INT     : /-?\d+/
 FLOAT   : /-?\d+\.\d+/
 BOOL    : /(#t|#f)/
 NAME    : /[a-zA-Z]\w*\??/
-OP : /[\+\-\*\/]/
+OP      : /[\+\-\*\/]/
 
 
 %ignore /\s+/
