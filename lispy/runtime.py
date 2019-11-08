@@ -56,6 +56,9 @@ def eval(x, env=None):
     elif head == Symbol.LAMBDA or head == 'fn':
         params, body = args
 
+        if not isinstance(params, list):
+            params = [params]
+
         if not all(map(lambda a: isinstance(a, Symbol), params)):
             raise TypeError('Invalid params on lambda definition!')
 
@@ -80,6 +83,12 @@ def eval(x, env=None):
             return eval(body, local)
 
         env[Symbol(name)] = fn
+
+    elif head == Symbol.LIST:
+        result = None
+        for l in args:
+            result = eval(l, env)
+        return result
 
     # Lista/chamada de funções
     # (sqrt 4)

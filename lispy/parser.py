@@ -51,7 +51,8 @@ class LispTransformer(InlineTransformer):
         cond, true, *elifs, false = args
         if not elifs:
             return [Symbol.IF, cond, true, false]
-        return [Symbol.IF, cond, true, self.sugar_if(*elifs[0], *elifs[1:], false)]
+        return [Symbol.IF, cond, true,
+                self.sugar_if(*elifs[0], *elifs[1:], false)]
 
     def sugar_fn(self, *args):
         *params, body = args
@@ -60,6 +61,10 @@ class LispTransformer(InlineTransformer):
     def function(self, *args):
         name, *params, body = args
         return ['defn', str(name), params, body]
+
+    def lists(self, *args):
+        return [Symbol.LIST] + list(args)
+
 
 def parse(src: str):
     """
