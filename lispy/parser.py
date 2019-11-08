@@ -33,6 +33,8 @@ class LispTransformer(InlineTransformer):
         return [Symbol.QUOTE, expr]
 
     def infix(self, x, op, y):
+        if isinstance(x, list) or isinstance(y, list):
+            return [[Symbol(op)], x, y]
         return [Symbol(op), x, y]
 
     def assign(self, name, expr):
@@ -47,11 +49,9 @@ class LispTransformer(InlineTransformer):
 
     def sugar_if(self, *args):
         cond, true, *elifs, false = args
-
         if not elifs:
             return [Symbol.IF, cond, true, false]
-        return NotImplemented
-
+        return [Symbol.IF, cond, true, self.sugar_if(*elifs[0], *elifs[1:], false)]
 
 def parse(src: str):
     """

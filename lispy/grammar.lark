@@ -2,7 +2,7 @@
 
 ?list : "(" list* ")" -> list
       | "'"list -> quote
-      | "[" list [OP|NAME] list "]" -> infix
+      | "[" list "("? [OP|NAME] ")"? list "]" -> infix
       | sugar_let
       | sugar_if
       | atom
