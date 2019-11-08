@@ -19,9 +19,11 @@ def eval(x, env=None):
         return env[x]
     elif isinstance(x, (int, float, bool, str)):
         return x
-
     # Avalia formas especiais e listas
     head, *args = x
+
+    if isinstance(head, (int, float, bool)):
+        return x
 
     # Comando (if <test> <then> <other>)
     # Ex: (if (even? x) (quotient x 2) x)
@@ -45,9 +47,9 @@ def eval(x, env=None):
     elif head == Symbol.LET:
         local, expr = args
 
-        tmp_env = env.new_child(
-            {Symbol(k): eval(v, env) for k, v in local}
-        )
+        tmp_env = env.copy()
+        for k,v in local:
+            tmp_env[k] = eval(v, tmp_env)
 
         return eval(expr, tmp_env)
 
@@ -85,15 +87,16 @@ def eval(x, env=None):
         env[Symbol(name)] = fn
 
     elif head == Symbol.LIST:
-        result = None
+        result = Symbol.LIST
         for l in args:
             result = eval(l, env)
-        return result
+        return [result]
 
     # Lista/chamada de funções
     # (sqrt 4)
     else:
         args = map(eval, args, [env]*len(args))
+        args = list(args)
         return env[head](*args)
 
 
