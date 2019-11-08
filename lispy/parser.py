@@ -33,7 +33,7 @@ class LispTransformer(InlineTransformer):
         return [Symbol.QUOTE, expr]
 
     def infix(self, x, op, y):
-        if isinstance(x, list) or isinstance(y, list):
+        if isinstance(x, list) and isinstance(y, list):
             return [[Symbol(op)], x, y]
         return [Symbol(op), x, y]
 
