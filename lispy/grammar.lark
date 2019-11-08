@@ -5,6 +5,8 @@
       | "[" list "("? [OP|NAME] ")"? list "]" -> infix
       | sugar_let
       | sugar_if
+      | sugar_fn
+      | function
       | atom
 
 ?sugar_let : ":let {" assign* "} in" list
@@ -12,6 +14,9 @@
 
 ?sugar_if : ":if" list "then"":" list eliff* ":else:" list
 ?eliff : ":elif" list "then"":" list
+
+?sugar_fn : ":fn " atom* ":" list
+?function: ":defn " NAME atom* ":" list
 
 ?atom : INT -> number
       | NAME -> name

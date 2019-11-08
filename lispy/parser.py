@@ -53,6 +53,14 @@ class LispTransformer(InlineTransformer):
             return [Symbol.IF, cond, true, false]
         return [Symbol.IF, cond, true, self.sugar_if(*elifs[0], *elifs[1:], false)]
 
+    def sugar_fn(self, *args):
+        *params, body = args
+        return ['fn', params, body]
+
+    def function(self, *args):
+        name, *params, body = args
+        return ['defn', str(name), params, body]
+
 def parse(src: str):
     """
     Compila string de entrada e retorna a S-expression equivalente.

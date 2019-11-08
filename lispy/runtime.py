@@ -53,7 +53,7 @@ def eval(x, env=None):
 
     # Comando (lambda <vars> <body>)
     # (lambda (x) (+ x 1))
-    elif head == Symbol.LAMBDA:
+    elif head == Symbol.LAMBDA or head == 'fn':
         params, body = args
 
         if not all(map(lambda a: isinstance(a, Symbol), params)):
@@ -66,6 +66,20 @@ def eval(x, env=None):
             return eval(body, local)
 
         return lambdaa
+
+    elif head == 'defn':
+        name, params, body = args
+
+        if not all(map(lambda a: isinstance(a, Symbol), params)):
+            raise TypeError('Invalid params on lambda definition!')
+
+        def fn(*args):
+            local = env.new_child(
+                {Symbol(k): eval(v, env) for k, v in zip(params, args)}
+            )
+            return eval(body, local)
+
+        env[Symbol(name)] = fn
 
     # Lista/chamada de funções
     # (sqrt 4)
