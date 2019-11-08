@@ -1,9 +1,12 @@
 ?start : list
 
 ?list : "(" list* ")" -> list
-      | atom
       | "'"list -> quote
+      | "[" list [OP|NAME] list "]" -> infix
+      | ":let {" assign*  "} in" list -> sugar_let
+      | atom
 
+?assign : NAME "=" list
 
 ?atom : INT -> number
       | NAME -> name

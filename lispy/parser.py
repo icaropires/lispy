@@ -32,6 +32,16 @@ class LispTransformer(InlineTransformer):
     def quote(self, expr):
         return [Symbol.QUOTE, expr]
 
+    def infix(self, x, op, y):
+        return [Symbol(op), x, y]
+
+    def assign(self, name, expr):
+        return [Symbol(name), expr]
+
+    def sugar_let(self, *args):
+        *assigns, expr = args
+        return [Symbol.LET, assigns, expr]
+
 
 def parse(src: str):
     """
