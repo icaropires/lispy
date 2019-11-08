@@ -16,8 +16,6 @@ def eval(x, env=None):
 
     # Avalia tipos atômicos
     if isinstance(x, Symbol):
-        if x == Symbol('x'):
-            print('@@@@@', list(env))
         return env[x]
     elif isinstance(x, (int, float, bool, str)):
         return x
@@ -45,10 +43,10 @@ def eval(x, env=None):
     # Comando (let <expression> <expression>)
     # (let ((x 1) (y 2)) (+ x y))
     elif head == Symbol.LET:
-        tmp_exprs, expr = args
+        local, expr = args
 
         tmp_env = env.new_child(
-            {Symbol(k): eval(v, env) for k, v in tmp_exprs}
+            {Symbol(k): eval(v, env) for k, v in local}
         )
 
         return eval(expr, tmp_env)
@@ -56,7 +54,18 @@ def eval(x, env=None):
     # Comando (lambda <vars> <body>)
     # (lambda (x) (+ x 1))
     elif head == Symbol.LAMBDA:
-        return NotImplemented
+        params, body = args
+
+        if not all(map(lambda a: isinstance(a, Symbol), params)):
+            raise TypeError('Invalid params on lambda definition!')
+
+        def lambdaa(*args):
+            local = env.new_child(
+                {Symbol(k): eval(v, env) for k, v in zip(params, args)}
+            )
+            return eval(body, local)
+
+        return lambdaa
 
     # Lista/chamada de funções
     # (sqrt 4)
