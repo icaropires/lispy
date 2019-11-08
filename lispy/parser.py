@@ -42,6 +42,16 @@ class LispTransformer(InlineTransformer):
         *assigns, expr = args
         return [Symbol.LET, assigns, expr]
 
+    def eliff(self, cond, true):
+        return [cond, true]
+
+    def sugar_if(self, *args):
+        cond, true, *elifs, false = args
+
+        if not elifs:
+            return [Symbol.IF, cond, true, false]
+        return NotImplemented
+
 
 def parse(src: str):
     """

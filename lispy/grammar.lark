@@ -3,10 +3,15 @@
 ?list : "(" list* ")" -> list
       | "'"list -> quote
       | "[" list [OP|NAME] list "]" -> infix
-      | ":let {" assign*  "} in" list -> sugar_let
+      | sugar_let
+      | sugar_if
       | atom
 
+?sugar_let : ":let {" assign* "} in" list
 ?assign : NAME "=" list
+
+?sugar_if : ":if" list "then"":" list eliff* ":else:" list
+?eliff : ":elif" list "then"":" list
 
 ?atom : INT -> number
       | NAME -> name
